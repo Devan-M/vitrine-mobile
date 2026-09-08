@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import {
   Button,
@@ -13,14 +14,16 @@ export default function LoginScreen() {
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
 
-  function handleLogin() {
-    if (!usuario || !senha) {
-      setErro('Preencha todos os campos.');
-      return;
-    }
-
-    setErro('');
+function handleLogin() {
+  if (!usuario || !senha) {
+    setErro('Preencha todos os campos.');
+    return;
   }
+
+  setErro('');
+
+  router.push('/products');
+}
 
   return (
     <SafeAreaView style={styles.container}>
