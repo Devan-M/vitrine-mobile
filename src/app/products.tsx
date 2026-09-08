@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -61,6 +62,12 @@ export default function ProductsScreen() {
 
   return (
     <View style={styles.container}>
+      <Pressable
+        style={styles.logoutButton}
+        onPress={() => router.replace('/')}
+      >
+        <Text style={styles.logoutText}>Sair</Text>
+      </Pressable>
       <Text style={styles.title}>Produtos Masculinos</Text>
       <View style={styles.genderTabs}>
         <Pressable
@@ -132,7 +139,15 @@ export default function ProductsScreen() {
         data={products}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          <Pressable
+            style={styles.card}
+            onPress={() =>
+              router.push({
+                pathname: '/product/[id]',
+                params: { id: item.id.toString() },
+              })
+            }
+          >
             <Image
               source={{ uri: item.thumbnail }}
               style={styles.image}
@@ -147,7 +162,7 @@ export default function ProductsScreen() {
                 US$ {item.price}
               </Text>
             </View>
-          </View>
+          </Pressable>
         )}
       />
     </View>
@@ -158,6 +173,21 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+
+  logoutButton: {
+    alignSelf: 'flex-end',
+    marginBottom: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: '#cccccc',
+    borderRadius: 8,
+  },
+
+  logoutText: {
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 
   genderTabs: {
