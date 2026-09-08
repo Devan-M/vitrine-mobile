@@ -30,12 +30,15 @@ export default function ProductsScreen() {
   const [selectedCategory, setSelectedCategory] = useState(
     MEN_CATEGORIES[0]
   );
+  const [error, setError] = useState('');
   const [selectedGender, setSelectedGender] = useState<'masculino' | 'feminino'>(
     'masculino'
   );
 
   useEffect(() => {
     async function loadProducts() {
+      setLoading(true);
+      setError('');
       try {
         const response = await api.get(
           `/products/category/${selectedCategory}`
@@ -43,6 +46,7 @@ export default function ProductsScreen() {
         setProducts(response.data.products);
       } catch (error) {
         console.error('Erro ao buscar produtos:', error);
+        setError('Não foi possível carregar os produtos.');
       } finally {
         setLoading(false);
       }
@@ -56,6 +60,14 @@ export default function ProductsScreen() {
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" />
         <Text>Carregando produtos...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.errorText}>{error}</Text>
       </View>
     );
   }
@@ -249,6 +261,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 12,
+  },
+
+  errorText: {
+    fontSize: 16,
+    textAlign: 'center',
   },
 
   title: {
