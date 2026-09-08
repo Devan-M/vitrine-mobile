@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
 import {
-    ActivityIndicator,
-    FlatList,
-    Image,
-    StyleSheet,
-    Text,
-    View,
+  ActivityIndicator,
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 
 import api from '@/services/api';
+
+import {
+  MEN_CATEGORIES,
+  WOMEN_CATEGORIES
+} from '@/constants/categories';
 
 type Product = {
   id: number;
@@ -20,14 +26,19 @@ type Product = {
 export default function ProductsScreen() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCategory, setSelectedCategory] = useState(
+    MEN_CATEGORIES[0]
+  );
+  const [selectedGender, setSelectedGender] = useState<'masculino' | 'feminino'>(
+    'masculino'
+  );
 
   useEffect(() => {
     async function loadProducts() {
       try {
         const response = await api.get(
-          '/products/category/mens-shirts'
+          `/products/category/${selectedCategory}`
         );
-
         setProducts(response.data.products);
       } catch (error) {
         console.error('Erro ao buscar produtos:', error);
@@ -37,7 +48,7 @@ export default function ProductsScreen() {
     }
 
     loadProducts();
-  }, []);
+  }, [selectedCategory]);
 
   if (loading) {
     return (
@@ -51,6 +62,71 @@ export default function ProductsScreen() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Produtos Masculinos</Text>
+      <View style={styles.genderTabs}>
+        <Pressable
+          style={[
+            styles.genderTab,
+            selectedGender === 'masculino' && styles.genderTabActive,
+          ]}
+          onPress={() => {
+            setSelectedGender('masculino');
+            setSelectedCategory(MEN_CATEGORIES[0]);
+          }}
+        >
+          <Text
+            style={[
+              styles.genderTabText,
+              selectedGender === 'masculino' && styles.genderTabTextActive,
+            ]}
+          >
+            Masculino
+          </Text>
+        </Pressable>
+
+        <Pressable
+          style={[
+            styles.genderTab,
+            selectedGender === 'feminino' && styles.genderTabActive,
+          ]}
+          onPress={() => {
+            setSelectedGender('feminino');
+            setSelectedCategory(WOMEN_CATEGORIES[0]);
+          }}
+        >
+          <Text
+            style={[
+              styles.genderTabText,
+              selectedGender === 'feminino' && styles.genderTabTextActive,
+            ]}
+          >
+            Feminino
+          </Text>
+        </Pressable>
+      </View>
+      <View style={styles.categories}>
+        {(selectedGender === 'masculino'
+          ? MEN_CATEGORIES
+          : WOMEN_CATEGORIES
+        ).map((category) => (
+          <Pressable
+            key={category}
+            style={[
+              styles.categoryButton,
+              selectedCategory === category && styles.categoryButtonActive,
+            ]}
+            onPress={() => setSelectedCategory(category)}
+          >
+            <Text
+              style={[
+                styles.categoryText,
+                selectedCategory === category && styles.categoryTextActive,
+              ]}
+            >
+              {category}
+            </Text>
+          </Pressable>
+        ))}
+      </View>
 
       <FlatList
         data={products}
@@ -82,6 +158,60 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+
+  genderTabs: {
+    flexDirection: 'row',
+    marginBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#dddddd',
+  },
+
+  genderTab: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+  },
+
+  genderTabActive: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#000000',
+  },
+
+  genderTabText: {
+    fontSize: 16,
+  },
+
+  genderTabTextActive: {
+    fontWeight: 'bold',
+  },
+
+  categories: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 16,
+  },
+
+  categoryButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderWidth: 1,
+    borderColor: '#cccccc',
+    borderRadius: 20,
+  },
+
+  categoryButtonActive: {
+    backgroundColor: '#000000',
+  },
+
+  categoryText: {
+    fontSize: 14,
+  },
+
+  categoryTextActive: {
+    color: '#ffffff',
+    fontWeight: 'bold',
   },
 
   loadingContainer: {
