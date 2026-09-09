@@ -1,13 +1,14 @@
 import { router } from 'expo-router';
 import { useState } from 'react';
 import {
-  Button,
-  SafeAreaView,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from 'react-native';
+
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
   const [usuario, setUsuario] = useState('');
@@ -27,11 +28,13 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.topBackground} />
+      {/* Frame 1 */}
+      <View style={styles.frame1} />
 
       {/* Frame 7 */}
-      <View style={styles.formContainer}>
-        <View style={styles.content}>
+      <View style={styles.frame7}>
+        {/* Bem-vindo */}
+        <View style={styles.welcome}>
           <Text style={styles.welcomeTitle}>
             Bem-vindo de volta!
           </Text>
@@ -39,57 +42,57 @@ export default function LoginScreen() {
           <Text style={styles.subtitle}>
             Insira seus dados para entrar na sua conta.
           </Text>
+        </View>
 
-          {/* Frame 2 */}
-          <View style={styles.formContainerBox}>
+        {/* Frame 2 */}
+        <View style={styles.frame2}>
+          {/* Frame 4 */}
+          <View style={styles.frame4}>
+            {/* FormControl Usuário */}
+            <View style={styles.formControl}>
+              <Text style={styles.fieldLabel}>
+                Usuário
+              </Text>
 
-            {/* Frame 4 */}
-            <View style={styles.formFields}>
-
-              {/* Usuário */}
-              <View style={styles.fieldGroup}>
-                <Text style={styles.fieldLabel}>
-                  Usuário
-                </Text>
-
-                <TextInput
-                  style={styles.input}
-                  value={usuario}
-                  onChangeText={setUsuario}
-                />
-              </View>
-
-              {/* Senha */}
-              <View style={styles.fieldGroup}>
-                <Text style={styles.fieldLabel}>
-                  Senha
-                </Text>
-
-                <View style={styles.passwordContainer}>
-                  <TextInput
-                    style={styles.passwordInput}
-                    value={senha}
-                    onChangeText={setSenha}
-                    secureTextEntry
-                  />
-
-                  {/* Botão olho será colocado aqui */}
-                </View>
-              </View>
-
-              {erro ? (
-                <Text style={styles.error}>
-                  {erro}
-                </Text>
-              ) : null}
-
-              {/* Botão Entrar */}
-              <Button
-                title="Entrar"
-                onPress={handleLogin}
+              <TextInput
+                style={styles.input}
+                value={usuario}
+                onChangeText={setUsuario}
+                placeholder=""
               />
-
             </View>
+
+            {/* FormControl Senha */}
+            <View style={styles.formControl}>
+              <Text style={styles.fieldLabel}>
+                Senha
+              </Text>
+
+              <TextInput
+                style={styles.input}
+                value={senha}
+                onChangeText={setSenha}
+                secureTextEntry
+                placeholder=""
+              />
+            </View>
+
+            {/* Mensagem de erro */}
+            {erro ? (
+              <Text style={styles.error}>
+                {erro}
+              </Text>
+            ) : null}
+
+            {/* Botão Entrar */}
+            <Pressable
+              style={styles.loginButton}
+              onPress={handleLogin}
+            >
+              <Text style={styles.loginButtonText}>
+                Entrar
+              </Text>
+            </Pressable>
           </View>
         </View>
       </View>
@@ -98,32 +101,40 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
+  /* Tela Login Vazio */
   container: {
     flex: 1,
-    justifyContent: 'center',
-    padding: 24,
+    backgroundColor: '#FFFFFF',
   },
 
-  formContainer: {
-    padding: 24,
-    marginHorizontal: 24,
-    marginTop: '30%',
-  },
-
-  topBackground: {
+  /* Frame 1 */
+  frame1: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: '50%',
+    height: 426,
     backgroundColor: '#2567E8',
   },
 
-  content: {
+  /* Frame 7 */
+  frame7: {
+    position: 'absolute',
+    top: 220,
+    left: 29,
+    width: 334,
+    gap: 32,
+  },
+
+  /* Bem-vindo */
+  welcome: {
+    width: '100%',
     gap: 16,
   },
 
   welcomeTitle: {
+    width: '100%',
+    height: 39,
     color: '#FFFFFF',
     fontSize: 32,
     fontWeight: '600',
@@ -133,74 +144,83 @@ const styles = StyleSheet.create({
   },
 
   subtitle: {
+    width: '100%',
+    height: 19,
+    color: '#FFFFFF',
     fontSize: 16,
     fontWeight: '400',
     lineHeight: 16,
     letterSpacing: 0,
     textAlign: 'center',
-    color: '#FFFFFF',
   },
 
-  input: {
-    borderWidth: 1,
-    borderColor: '#cccccc',
-    borderRadius: 8,
-    padding: 12,
-    fontSize: 16,
-  },
-
-  error: {
-    color: 'red',
-    textAlign: 'center',
-  },
-
-  formContainerBox: {
+  /* Frame 2 */
+  frame2: {
+    width: '100%',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#BDBDBD',
     borderRadius: 16,
+
     paddingTop: 50,
     paddingRight: 24,
     paddingBottom: 50,
     paddingLeft: 24,
   },
 
-  formFields: {
+  /* Frame 4 */
+  frame4: {
     width: '100%',
-    flexDirection: 'column',
+    gap: 24,
   },
 
-  fieldGroup: {
+  /* FormControl */
+  formControl: {
     width: '100%',
+    gap: 6,
   },
 
+  /* Label */
   fieldLabel: {
-    fontSize: 16,
+    color: '#262627',
+    fontSize: 14,
+    fontWeight: '500',
+    lineHeight: 14,
+    letterSpacing: 0,
   },
 
+  /* Input */
   input: {
     width: '100%',
+    height: 39,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#D3D3D3',
-    borderRadius: 8,
+    borderRadius: 4,
     paddingHorizontal: 12,
-    paddingVertical: 12,
   },
 
-  passwordContainer: {
+  /* Mensagem de erro */
+  error: {
+    color: '#FF0000',
+    textAlign: 'center',
+    fontSize: 14,
+  },
+
+  /* Botão Entrar */
+  loginButton: {
     width: '100%',
-    flexDirection: 'row',
+    height: 40,
+    backgroundColor: '#2567E8',
+    borderRadius: 4,
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#D3D3D3',
-    borderRadius: 8,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
   },
 
-  passwordInput: {
-    flex: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 12,
+  loginButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '500',
   },
 });
