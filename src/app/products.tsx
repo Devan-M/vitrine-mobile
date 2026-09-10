@@ -22,7 +22,9 @@ import {
 type Product = {
   id: number;
   title: string;
+  description: string;
   price: number;
+  discountPercentage: number;
   thumbnail: string;
 };
 
@@ -43,11 +45,22 @@ export default function ProductsScreen() {
       setError('');
 
       try {
-        const response = await api.get(
-          `/products/category/${selectedCategory}`
+        const categories =
+          selectedGender === 'masculino'
+            ? MEN_CATEGORIES
+            : WOMEN_CATEGORIES;
+
+        const responses = await Promise.all(
+          categories.map((category) =>
+            api.get(`/products/category/${category}`)
+          )
         );
 
-        setProducts(response.data.products);
+        const allProducts = responses.flatMap(
+          (response) => response.data.products
+        );
+
+        setProducts(allProducts);
       } catch (error) {
         console.error('Erro ao buscar produtos:', error);
         setError('Não foi possível carregar os produtos.');
@@ -57,7 +70,7 @@ export default function ProductsScreen() {
     }
 
     loadProducts();
-  }, [selectedCategory]);
+  }, [selectedGender]);
 
   if (loading) {
     return (
@@ -115,16 +128,15 @@ export default function ProductsScreen() {
 
       {/* Conteúdo temporário */}
       <View style={styles.content}>
-        <Text style={styles.categoryTitle}>
-          {selectedCategory}
-        </Text>
-
         <FlatList
           data={products}
+          numColumns={2}
           keyExtractor={(item) => item.id.toString()}
+          columnWrapperStyle={styles.productRow}
+          contentContainerStyle={styles.productList}
           renderItem={({ item }) => (
             <Pressable
-              style={styles.oldCard}
+              style={styles.card}
               onPress={() =>
                 router.push({
                   pathname: '/product/[id]',
@@ -134,17 +146,24 @@ export default function ProductsScreen() {
                 })
               }
             >
-              <Image
-                source={{ uri: item.thumbnail }}
-                style={styles.oldImage}
-              />
+              <View style={styles.imageContainer}>
+                <Image
+                  source={{ uri: item.thumbnail }}
+                  style={styles.image}
+                  resizeMode="contain"
+                />
+              </View>
 
-              <View style={styles.oldInfo}>
-                <Text style={styles.oldProductTitle}>
+              <View style={styles.info}>
+                <Text style={styles.productTitle}>
                   {item.title}
                 </Text>
 
-                <Text style={styles.oldPrice}>
+                <Text style={styles.description}>
+                  {item.description}
+                </Text>
+
+                <Text style={styles.price}>
                   US$ {item.price}
                 </Text>
               </View>
@@ -200,41 +219,75 @@ const styles = StyleSheet.create({
     padding: 16,
   },
 
-  categoryTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 12,
+  productList: {
+    width: 351,
+    alignSelf: 'center',
   },
 
-  oldCard: {
-    flexDirection: 'row',
-    padding: 12,
-    marginBottom: 12,
+  productRow: {
+    gap: 16,
+    marginBottom: 16,
+  },
+
+  card: {
+    width: 167.5,
+    height: 224,
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#DDDDDD',
+    borderColor: '#BDBDBD',
     borderRadius: 8,
-    gap: 12,
+    paddingBottom: 8,
+    overflow: 'hidden',
   },
 
-  oldImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
+  imageContainer: {
+    width: 167.5,
+    height: 100,
+    borderBottomWidth: 1,
+    borderBottomColor: '#BDBDBD',
   },
 
-  oldInfo: {
-    flex: 1,
-    justifyContent: 'center',
+  image: {
+    width: 167.5,
+    height: 99,
   },
 
-  oldProductTitle: {
+  info: {
+    width: 167.5,
+    height: 108,
+    paddingHorizontal: 8,
+    paddingTop: 8,
+    gap: 16,
+  },
+
+  productTitle: {
+    width: 151.5,
+    height: 19,
+    fontFamily: 'Inter',
     fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
+    fontWeight: '600',
+    lineHeight: 19,
+    color: '#000000',
   },
 
-  oldPrice: {
-    fontSize: 16,
+  description: {
+    width: 151.5,
+    height: 48,
+    fontFamily: 'Inter',
+    fontSize: 10,
+    fontWeight: '400',
+    lineHeight: 10,
+    color: '#656565',
+  },
+
+  price: {
+    width: 151.5,
+    height: 17,
+    fontFamily: 'Inter',
+    fontSize: 14,
+    fontWeight: '600',
+    lineHeight: 14,
+    color: '#000000',
   },
 
   loadingContainer: {
