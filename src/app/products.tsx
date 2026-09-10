@@ -10,11 +10,13 @@ import {
   View,
 } from 'react-native';
 
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 import api from '@/services/api';
 
 import {
   MEN_CATEGORIES,
-  WOMEN_CATEGORIES
+  WOMEN_CATEGORIES,
 } from '@/constants/categories';
 
 type Product = {
@@ -31,18 +33,20 @@ export default function ProductsScreen() {
     MEN_CATEGORIES[0]
   );
   const [error, setError] = useState('');
-  const [selectedGender, setSelectedGender] = useState<'masculino' | 'feminino'>(
-    'masculino'
-  );
+  const [selectedGender, setSelectedGender] = useState<
+    'masculino' | 'feminino'
+  >('masculino');
 
   useEffect(() => {
     async function loadProducts() {
       setLoading(true);
       setError('');
+
       try {
         const response = await api.get(
           `/products/category/${selectedCategory}`
         );
+
         setProducts(response.data.products);
       } catch (error) {
         console.error('Erro ao buscar produtos:', error);
@@ -73,187 +77,164 @@ export default function ProductsScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <Pressable
-        style={styles.logoutButton}
-        onPress={() => router.replace('/')}
-      >
-        <Text style={styles.logoutText}>Sair</Text>
-      </Pressable>
-      <Text style={styles.title}>Produtos Masculinos</Text>
+    <SafeAreaView style={styles.container}>
+      {/* Barra superior de gênero */}
       <View style={styles.genderTabs}>
         <Pressable
-          style={[
-            styles.genderTab,
-            selectedGender === 'masculino' && styles.genderTabActive,
-          ]}
+          style={styles.genderTab}
           onPress={() => {
             setSelectedGender('masculino');
             setSelectedCategory(MEN_CATEGORIES[0]);
           }}
         >
-          <Text
-            style={[
-              styles.genderTabText,
-              selectedGender === 'masculino' && styles.genderTabTextActive,
-            ]}
-          >
-            Masculino
+          <Text style={styles.genderTabText}>
+            Produtos Masculinos
           </Text>
+
+          {selectedGender === 'masculino' && (
+            <View style={styles.genderIndicator} />
+          )}
         </Pressable>
 
         <Pressable
-          style={[
-            styles.genderTab,
-            selectedGender === 'feminino' && styles.genderTabActive,
-          ]}
+          style={styles.genderTab}
           onPress={() => {
             setSelectedGender('feminino');
             setSelectedCategory(WOMEN_CATEGORIES[0]);
           }}
         >
-          <Text
-            style={[
-              styles.genderTabText,
-              selectedGender === 'feminino' && styles.genderTabTextActive,
-            ]}
-          >
-            Feminino
+          <Text style={styles.genderTabText}>
+            Produtos Femininos
           </Text>
+
+          {selectedGender === 'feminino' && (
+            <View style={styles.genderIndicator} />
+          )}
         </Pressable>
       </View>
-      <View style={styles.categories}>
-        {(selectedGender === 'masculino'
-          ? MEN_CATEGORIES
-          : WOMEN_CATEGORIES
-        ).map((category) => (
-          <Pressable
-            key={category}
-            style={[
-              styles.categoryButton,
-              selectedCategory === category && styles.categoryButtonActive,
-            ]}
-            onPress={() => setSelectedCategory(category)}
-          >
-            <Text
-              style={[
-                styles.categoryText,
-                selectedCategory === category && styles.categoryTextActive,
-              ]}
+
+      {/* Conteúdo temporário */}
+      <View style={styles.content}>
+        <Text style={styles.categoryTitle}>
+          {selectedCategory}
+        </Text>
+
+        <FlatList
+          data={products}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <Pressable
+              style={styles.oldCard}
+              onPress={() =>
+                router.push({
+                  pathname: '/product/[id]',
+                  params: {
+                    id: item.id.toString(),
+                  },
+                })
+              }
             >
-              {category}
-            </Text>
-          </Pressable>
-        ))}
+              <Image
+                source={{ uri: item.thumbnail }}
+                style={styles.oldImage}
+              />
+
+              <View style={styles.oldInfo}>
+                <Text style={styles.oldProductTitle}>
+                  {item.title}
+                </Text>
+
+                <Text style={styles.oldPrice}>
+                  US$ {item.price}
+                </Text>
+              </View>
+            </Pressable>
+          )}
+        />
       </View>
-
-      <FlatList
-        data={products}
-        keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => (
-          <Pressable
-            style={styles.card}
-            onPress={() =>
-              router.push({
-                pathname: '/product/[id]',
-                params: { id: item.id.toString() },
-              })
-            }
-          >
-            <Image
-              source={{ uri: item.thumbnail }}
-              style={styles.image}
-            />
-
-            <View style={styles.info}>
-              <Text style={styles.productTitle}>
-                {item.title}
-              </Text>
-
-              <Text style={styles.price}>
-                US$ {item.price}
-              </Text>
-            </View>
-          </Pressable>
-        )}
-      />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-  },
-
-  logoutButton: {
-    alignSelf: 'flex-end',
-    marginBottom: 12,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderWidth: 1,
-    borderColor: '#cccccc',
-    borderRadius: 8,
-  },
-
-  logoutText: {
-    fontSize: 14,
-    fontWeight: 'bold',
+    backgroundColor: '#FFFFFF',
   },
 
   genderTabs: {
+    width: 393,
+    height: 50,
     flexDirection: 'row',
-    marginBottom: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#dddddd',
+    backgroundColor: '#FFFFFF',
   },
 
   genderTab: {
-    flex: 1,
-    paddingVertical: 12,
+    width: 196.5,
+    height: 50,
     alignItems: 'center',
-  },
-
-  genderTabActive: {
-    borderBottomWidth: 2,
-    borderBottomColor: '#000000',
+    justifyContent: 'center',
+    position: 'relative',
   },
 
   genderTabText: {
-    fontSize: 16,
+    fontFamily: 'Inter',
+    fontSize: 12,
+    fontWeight: '600',
+    lineHeight: 16,
+    letterSpacing: 0.4,
+    color: '#000000',
   },
 
-  genderTabTextActive: {
-    fontWeight: 'bold',
+  genderIndicator: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: 196.5,
+    height: 2.5,
+    backgroundColor: '#2567E8',
   },
 
-  categories: {
+  content: {
+    flex: 1,
+    padding: 16,
+  },
+
+  categoryTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+
+  oldCard: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 16,
-  },
-
-  categoryButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    padding: 12,
+    marginBottom: 12,
     borderWidth: 1,
-    borderColor: '#cccccc',
-    borderRadius: 20,
+    borderColor: '#DDDDDD',
+    borderRadius: 8,
+    gap: 12,
   },
 
-  categoryButtonActive: {
-    backgroundColor: '#000000',
+  oldImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
   },
 
-  categoryText: {
-    fontSize: 14,
+  oldInfo: {
+    flex: 1,
+    justifyContent: 'center',
   },
 
-  categoryTextActive: {
-    color: '#ffffff',
+  oldProductTitle: {
+    fontSize: 16,
     fontWeight: 'bold',
+    marginBottom: 8,
+  },
+
+  oldPrice: {
+    fontSize: 16,
   },
 
   loadingContainer: {
@@ -266,43 +247,5 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 16,
     textAlign: 'center',
-  },
-
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
-    textAlign: 'center',
-  },
-
-  card: {
-    flexDirection: 'row',
-    padding: 12,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#dddddd',
-    borderRadius: 8,
-    gap: 12,
-  },
-
-  image: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
-  },
-
-  info: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-
-  productTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-
-  price: {
-    fontSize: 16,
   },
 });
