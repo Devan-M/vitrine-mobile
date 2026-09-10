@@ -1,3 +1,5 @@
+import AlertIcon from '@/components/AlertIcon';
+import EyeIcon from '@/components/EyeIcon';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import {
@@ -7,21 +9,32 @@ import {
   TextInput,
   View,
 } from 'react-native';
-
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function LoginScreen() {
   const [usuario, setUsuario] = useState('');
   const [senha, setSenha] = useState('');
-  const [erro, setErro] = useState('');
+  const [erroUsuario, setErroUsuario] = useState(false);
+  const [erroSenha, setErroSenha] = useState(false);
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [erroLogin, setErroLogin] = useState(false);
 
   function handleLogin() {
-    if (!usuario || !senha) {
-      setErro('Preencha todos os campos.');
+    const usuarioVazio = !usuario.trim();
+    const senhaVazia = !senha.trim();
+
+    setErroUsuario(usuarioVazio);
+    setErroSenha(senhaVazia);
+    setErroLogin(false);
+
+    if (usuarioVazio || senhaVazia) {
       return;
     }
 
-    setErro('');
+    if (usuario !== 'admin' || senha !== '123456') {
+      setErroLogin(true);
+      return;
+    }
 
     router.push('/products');
   }
@@ -48,6 +61,12 @@ export default function LoginScreen() {
         <View style={styles.frame2}>
           {/* Frame 4 */}
           <View style={styles.frame4}>
+
+            {erroLogin ? (
+              <Text style={styles.loginError}>
+                Username ou senha inválidos
+              </Text>
+            ) : null}
             {/* FormControl Usuário */}
             <View style={styles.formControl}>
               <Text style={styles.fieldLabel}>
@@ -55,11 +74,28 @@ export default function LoginScreen() {
               </Text>
 
               <TextInput
-                style={styles.input}
+                style={[
+                  styles.input,
+                  erroUsuario && styles.inputError,
+                ]}
                 value={usuario}
-                onChangeText={setUsuario}
+                onChangeText={(text) => {
+                  setUsuario(text);
+                  if (text.trim()) {
+                    setErroUsuario(false);
+                  }
+                }}
                 placeholder=""
               />
+
+              {erroUsuario ? (
+                <View style={styles.errorContainer}>
+                  <AlertIcon color="#B91C1C" />
+                  <Text style={styles.errorMessage}>
+                    Campo obrigatório
+                  </Text>
+                </View>
+              ) : null}
             </View>
 
             {/* FormControl Senha */}
@@ -68,21 +104,42 @@ export default function LoginScreen() {
                 Senha
               </Text>
 
-              <TextInput
-                style={styles.input}
-                value={senha}
-                onChangeText={setSenha}
-                secureTextEntry
-                placeholder=""
-              />
-            </View>
+              <View style={styles.passwordInputContainer}>
+                <TextInput
+                  style={[
+                    styles.input,
+                    styles.passwordInput,
+                    erroSenha && styles.inputError,
+                  ]}
+                  value={senha}
+                  onChangeText={(text) => {
+                    setSenha(text);
 
-            {/* Mensagem de erro */}
-            {erro ? (
-              <Text style={styles.error}>
-                {erro}
-              </Text>
-            ) : null}
+                    if (text.trim()) {
+                      setErroSenha(false);
+                    }
+                  }}
+                  secureTextEntry={!mostrarSenha}
+                  placeholder=""
+                />
+
+                <Pressable
+                  style={styles.eyeButton}
+                  onPress={() => setMostrarSenha(!mostrarSenha)}
+                >
+                  <EyeIcon visible={mostrarSenha} />
+                </Pressable>
+              </View>
+
+              {erroSenha ? (
+                <View style={styles.errorContainer}>
+                  <AlertIcon color="#B91C1C" />
+                  <Text style={styles.errorMessage}>
+                    Campo obrigatório
+                  </Text>
+                </View>
+              ) : null}
+            </View>
 
             {/* Botão Entrar */}
             <Pressable
@@ -223,4 +280,67 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
   },
+
+  inputError: {
+    borderColor: '#B91C1C',
+  },
+
+  errorContainer: {
+    width: '100%',
+    minHeight: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+
+  errorMessage: {
+    flex: 1,
+    color: '#B91C1C',
+    fontSize: 14,
+    lineHeight: 14,
+  },
+
+  errorIcon: {
+    width: 16,
+    height: 16,
+    color: '#B91C1C',
+    fontSize: 12,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  passwordInputContainer: {
+    position: 'relative',
+    width: '100%',
+  },
+
+  passwordInput: {
+    paddingRight: 42,
+  },
+
+  eyeButton: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    width: 40,
+    height: 39,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  eyeIcon: {
+    fontSize: 20,
+    color: '#262627',
+  },
+
+  loginError: {
+    width: 221,
+    height: 19,
+    alignSelf: 'center',
+    color: '#B91C1C',
+    fontSize: 16,
+    fontWeight: '400',
+    lineHeight: 16,
+    letterSpacing: 0,
+  },
+
 });
