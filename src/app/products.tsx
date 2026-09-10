@@ -19,6 +19,10 @@ import {
   WOMEN_CATEGORIES,
 } from '@/constants/categories';
 
+import AddIcon from '@/components/AddIcon';
+import GearIcon from '@/components/GearIcon';
+import HomeIcon from '@/components/HomeIcon';
+
 type Product = {
   id: number;
   title: string;
@@ -171,6 +175,32 @@ export default function ProductsScreen() {
           )}
         />
       </View>
+      <Pressable style={styles.floatingButton}>
+        <AddIcon color="#FFFFFF" />
+      </Pressable>
+      <View style={styles.navigationContainer}>
+        <View style={styles.bottomNavigation}>
+          <Pressable style={styles.navigationTab}>
+            <HomeIcon color="#2567E8" />
+
+            <Text style={styles.navigationTextSelected}>
+              Início
+            </Text>
+          </Pressable>
+
+          <Pressable style={styles.navigationTab}>
+            <GearIcon color="#262627" />
+
+            <Text style={styles.navigationText}>
+              Configurações
+            </Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.gestureNavigation}>
+          <View style={styles.gestureIndicator} />
+        </View>
+      </View>
     </SafeAreaView>
   );
 }
@@ -301,4 +331,92 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
+
+  bottomNavigation: {
+    width: '100%',
+    height: 56,
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 3.75,
+    },
+    shadowOpacity: 0.19,
+    shadowRadius: 5.5,
+
+    elevation: 8,
+  },
+
+  navigationTab: {
+    width: '50%',
+    height: 56,
+    paddingVertical: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 2,
+  },
+
+  navigationTextSelected: {
+    fontFamily: 'Inter',
+    fontSize: 12,
+    fontWeight: '600',
+    lineHeight: 16,
+    letterSpacing: 0.4,
+    color: '#2567E8',
+  },
+
+  navigationText: {
+    fontFamily: 'Inter',
+    fontSize: 12,
+    fontWeight: '600',
+    lineHeight: 16,
+    letterSpacing: 0.4,
+    color: '#262627',
+  },
+
+  navigationContainer: {
+    width: '100%',
+    height: 70,
+    backgroundColor: '#FFFFFF',
+  },
+
+  gestureNavigation: {
+    width: 393,
+    height: 14,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  gestureIndicator: {
+    width: 64,
+    height: 2,
+    backgroundColor: '#949494',
+    borderRadius: 32,
+  },
+
+  floatingButton: {
+    position: 'absolute',
+    width: 50,
+    height: 50,
+    top: 695,
+    left: 331,
+    borderRadius: 25,
+    backgroundColor: '#2567E8',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    shadowColor: '#262626',
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+
+    elevation: 6,
+  },
+
 });
