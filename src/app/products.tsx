@@ -1,9 +1,7 @@
-import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
-  Image,
   Pressable,
   StyleSheet,
   Text,
@@ -12,17 +10,17 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import api from '@/services/api';
+import AddIcon from '@/components/AddIcon';
+import GearIcon from '@/components/GearIcon';
+import HomeIcon from '@/components/HomeIcon';
+import ProductCard from '@/components/ProductCard';
 
 import {
   MEN_CATEGORIES,
   WOMEN_CATEGORIES,
 } from '@/constants/categories';
 
-import AddIcon from '@/components/AddIcon';
-import GearIcon from '@/components/GearIcon';
-import HomeIcon from '@/components/HomeIcon';
-import { formatPrice } from '@/services/price';
+import api from '@/services/api';
 
 type Product = {
   id: number;
@@ -36,9 +34,6 @@ type Product = {
 export default function ProductsScreen() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState(
-    MEN_CATEGORIES[0]
-  );
   const [error, setError] = useState('');
   const [selectedGender, setSelectedGender] = useState<
     'masculino' | 'feminino'
@@ -102,7 +97,6 @@ export default function ProductsScreen() {
           style={styles.genderTab}
           onPress={() => {
             setSelectedGender('masculino');
-            setSelectedCategory(MEN_CATEGORIES[0]);
           }}
         >
           <Text style={styles.genderTabText}>
@@ -118,7 +112,6 @@ export default function ProductsScreen() {
           style={styles.genderTab}
           onPress={() => {
             setSelectedGender('feminino');
-            setSelectedCategory(WOMEN_CATEGORIES[0]);
           }}
         >
           <Text style={styles.genderTabText}>
@@ -140,58 +133,15 @@ export default function ProductsScreen() {
           columnWrapperStyle={styles.productRow}
           contentContainerStyle={styles.productList}
           renderItem={({ item }) => (
-            <Pressable
-              style={styles.card}
-              onPress={() =>
-                router.push({
-                  pathname: '/product/[id]',
-                  params: {
-                    id: item.id.toString(),
-                  },
-                })
-              }
-            >
-              <View style={styles.imageContainer}>
-                <Image
-                  source={{ uri: item.thumbnail }}
-                  style={styles.image}
-                  resizeMode="contain"
-                />
-              </View>
-
-              <View style={styles.info}>
-                <Text style={styles.productTitle}>
-                  {item.title}
-                </Text>
-
-                <Text style={styles.description}
-                  numberOfLines={4}
-                  ellipsizeMode="tail"
-                >
-                  {item.description}
-                </Text>
-
-                <View style={styles.priceContainer}>
-                  <Text style={styles.price}>
-                    {formatPrice(item.price)}
-                  </Text>
-
-                  {item.discountPercentage > 0 && (
-                    <Text style={styles.oldPrice}>
-                      {formatPrice(
-                        item.price / (1 - item.discountPercentage / 100)
-                      )}
-                    </Text>
-                  )}
-                </View>
-              </View>
-            </Pressable>
+            <ProductCard product={item} />
           )}
         />
       </View>
+
       <Pressable style={styles.floatingButton}>
         <AddIcon color="#FFFFFF" />
       </Pressable>
+
       <View style={styles.navigationContainer}>
         <View style={styles.bottomNavigation}>
           <Pressable style={styles.navigationTab}>
@@ -270,82 +220,6 @@ const styles = StyleSheet.create({
   productRow: {
     gap: 16,
     marginBottom: 16,
-  },
-
-  card: {
-    width: 167.5,
-    height: 205,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#BDBDBD',
-    borderRadius: 8,
-    paddingBottom: 8,
-    overflow: 'hidden',
-  },
-
-  imageContainer: {
-    width: 167.5,
-    height: 100,
-    borderBottomWidth: 1,
-    borderBottomColor: '#BDBDBD',
-  },
-
-  image: {
-    width: 167.5,
-    height: 99,
-  },
-
-  info: {
-    width: 167.5,
-    height: 108,
-    paddingHorizontal: 8,
-    paddingTop: 4,
-    gap: 5,
-  },
-
-  productTitle: {
-    width: 151.5,
-    height: 19,
-    fontFamily: 'Inter_600SemiBold',
-    fontSize: 14,
-    lineHeight: 19,
-    letterSpacing: 0,
-    color: '#000000',
-  },
-
-  description: {
-    width: 151.5,
-    height: 48,
-    fontFamily: 'Inter_400Regular',
-    fontSize: 10,
-    fontStyle: 'normal',
-    lineHeight: 10,
-    letterSpacing: 0,
-    color: '#656565',
-  },
-
-  priceContainer: {
-    width: 151.5,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-
-  oldPrice: {
-    fontFamily: 'Inter_600SemiBold',
-    fontSize: 10,
-    lineHeight: 10,
-    letterSpacing: 0,
-    color: '#656565',
-    textDecorationLine: 'line-through',
-  },
-
-  price: {
-    fontFamily: 'Inter_600SemiBold',
-    fontSize: 14,
-    lineHeight: 14,
-    letterSpacing: 0,
-    color: '#000000',
   },
 
   loadingContainer: {
@@ -444,5 +318,4 @@ const styles = StyleSheet.create({
 
     elevation: 6,
   },
-
 });
