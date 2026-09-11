@@ -241,9 +241,8 @@ const styles = StyleSheet.create({
   },
 
   genderTabText: {
-    fontFamily: 'Inter',
+    fontFamily: 'Inter_600SemiBold',
     fontSize: 16,
-    fontWeight: '600',
     lineHeight: 16,
     letterSpacing: 0.4,
     color: '#000000',
@@ -307,9 +306,8 @@ const styles = StyleSheet.create({
   productTitle: {
     width: 151.5,
     height: 19,
-    fontFamily: 'Inter',
+    fontFamily: 'Inter_600SemiBold',
     fontSize: 14,
-    fontWeight: '600',
     lineHeight: 19,
     letterSpacing: 0,
     color: '#000000',
@@ -318,9 +316,8 @@ const styles = StyleSheet.create({
   description: {
     width: 151.5,
     height: 48,
-    fontFamily: 'Inter',
+    fontFamily: 'Inter_400Regular',
     fontSize: 10,
-    fontWeight: '400',
     fontStyle: 'normal',
     lineHeight: 10,
     letterSpacing: 0,
@@ -335,9 +332,8 @@ const styles = StyleSheet.create({
   },
 
   oldPrice: {
-    fontFamily: 'Inter',
+    fontFamily: 'Inter_600SemiBold',
     fontSize: 10,
-    fontWeight: '600',
     lineHeight: 10,
     letterSpacing: 0,
     color: '#656565',
@@ -345,9 +341,8 @@ const styles = StyleSheet.create({
   },
 
   price: {
-    fontFamily: 'Inter',
+    fontFamily: 'Inter_600SemiBold',
     fontSize: 14,
-    fontWeight: '600',
     lineHeight: 14,
     letterSpacing: 0,
     color: '#000000',
@@ -392,18 +387,16 @@ const styles = StyleSheet.create({
   },
 
   navigationTextSelected: {
-    fontFamily: 'Inter',
+    fontFamily: 'Inter_600SemiBold',
     fontSize: 12,
-    fontWeight: '600',
     lineHeight: 16,
     letterSpacing: 0.4,
     color: '#2567E8',
   },
 
   navigationText: {
-    fontFamily: 'Inter',
+    fontFamily: 'Inter_600SemiBold',
     fontSize: 12,
-    fontWeight: '600',
     lineHeight: 16,
     letterSpacing: 0.4,
     color: '#262627',
