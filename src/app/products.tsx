@@ -164,7 +164,10 @@ export default function ProductsScreen() {
                   {item.title}
                 </Text>
 
-                <Text style={styles.description}>
+                <Text style={styles.description}
+                  numberOfLines={4}
+                  ellipsizeMode="tail"
+                >
                   {item.description}
                 </Text>
 
@@ -272,7 +275,7 @@ const styles = StyleSheet.create({
 
   card: {
     width: 167.5,
-    height: 224,
+    height: 205,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#BDBDBD',
@@ -297,15 +300,15 @@ const styles = StyleSheet.create({
     width: 167.5,
     height: 108,
     paddingHorizontal: 8,
-    paddingTop: 8,
-    gap: 16,
+    paddingTop: 4,
+    gap: 5,
   },
 
   productTitle: {
     width: 151.5,
     height: 19,
     fontFamily: 'Inter',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
     lineHeight: 19,
     letterSpacing: 0,
@@ -328,7 +331,7 @@ const styles = StyleSheet.create({
     width: 151.5,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 4,
   },
 
   oldPrice: {
