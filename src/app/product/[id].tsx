@@ -13,15 +13,7 @@ import {
 import BackIcon from '@/components/BackIcon';
 import api from '@/services/api';
 import { formatPrice } from '@/services/price';
-
-type Product = {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  discountPercentage: number;
-  thumbnail: string;
-};
+import type { Product } from '@/types/product';
 
 export default function ProductDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

@@ -1,22 +1,14 @@
 import { router } from 'expo-router';
 import {
-    Image,
-    Pressable,
-    StyleSheet,
-    Text,
-    View,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 
 import { formatPrice } from '@/services/price';
-
-type Product = {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  discountPercentage: number;
-  thumbnail: string;
-};
+import type { Product } from '@/types/product';
 
 type ProductCardProps = {
   product: Product;

@@ -21,15 +21,7 @@ import {
 } from '@/constants/categories';
 
 import api from '@/services/api';
-
-type Product = {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  discountPercentage: number;
-  thumbnail: string;
-};
+import type { Product } from '@/types/product';
 
 export default function ProductsScreen() {
   const [products, setProducts] = useState<Product[]>([]);
