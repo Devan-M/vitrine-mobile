@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
@@ -14,6 +15,7 @@ import AddIcon from '@/components/AddIcon';
 import GearIcon from '@/components/GearIcon';
 import HomeIcon from '@/components/HomeIcon';
 import ProductCard from '@/components/ProductCard';
+import { logout } from '@/services/auth';
 
 import {
   MEN_CATEGORIES,
@@ -79,6 +81,15 @@ export default function ProductsScreen() {
         <Text style={styles.errorText}>{error}</Text>
       </View>
     );
+  }
+
+  async function handleLogout() {
+    try {
+      await logout();
+      router.replace('/');
+    } catch (error) {
+      console.error('Erro ao sair da conta:', error);
+    }
   }
 
   return (
@@ -152,6 +163,16 @@ export default function ProductsScreen() {
             </Text>
           </Pressable>
         </View>
+
+        <Pressable
+          style={styles.logoutButton}
+          onPress={handleLogout}
+        >
+
+          <Text style={styles.logoutButtonText}>
+            Sair da conta
+          </Text>
+        </Pressable>
 
         <View style={styles.gestureNavigation}>
           <View style={styles.gestureIndicator} />
@@ -231,7 +252,6 @@ const styles = StyleSheet.create({
     height: 56,
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
-
     shadowColor: '#000000',
     shadowOffset: {
       width: 0,
@@ -239,7 +259,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.19,
     shadowRadius: 5.5,
-
     elevation: 8,
   },
 
@@ -270,7 +289,7 @@ const styles = StyleSheet.create({
 
   navigationContainer: {
     width: '100%',
-    height: 70,
+    height: 110,
     backgroundColor: '#FFFFFF',
   },
 
@@ -293,7 +312,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 50,
     height: 50,
-    top: 695,
+    top: 650,
     left: 331,
     borderRadius: 25,
     backgroundColor: '#2567E8',
@@ -309,5 +328,23 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
 
     elevation: 6,
+  },
+
+  logoutButton: {
+    width: 353,
+    height: 40,
+    alignSelf: 'center',
+    backgroundColor: '#E63535',
+    borderRadius: 4,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  logoutButtonText: {
+    fontFamily: 'Inter_600SemiBold',
+    fontSize: 14,
+    lineHeight: 16,
+    color: '#FFFFFF',
   },
 });
