@@ -22,6 +22,7 @@ import {
 import AddIcon from '@/components/AddIcon';
 import GearIcon from '@/components/GearIcon';
 import HomeIcon from '@/components/HomeIcon';
+import { formatPrice } from '@/services/price';
 
 type Product = {
   id: number;
@@ -167,9 +168,19 @@ export default function ProductsScreen() {
                   {item.description}
                 </Text>
 
-                <Text style={styles.price}>
-                  US$ {item.price}
-                </Text>
+                <View style={styles.priceContainer}>
+                  <Text style={styles.price}>
+                    {formatPrice(item.price)}
+                  </Text>
+
+                  {item.discountPercentage > 0 && (
+                    <Text style={styles.oldPrice}>
+                      {formatPrice(
+                        item.price / (1 - item.discountPercentage / 100)
+                      )}
+                    </Text>
+                  )}
+                </View>
               </View>
             </Pressable>
           )}
@@ -228,7 +239,7 @@ const styles = StyleSheet.create({
 
   genderTabText: {
     fontFamily: 'Inter',
-    fontSize: 12,
+    fontSize: 16,
     fontWeight: '600',
     lineHeight: 16,
     letterSpacing: 0.4,
@@ -297,6 +308,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     lineHeight: 19,
+    letterSpacing: 0,
     color: '#000000',
   },
 
@@ -306,17 +318,35 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter',
     fontSize: 10,
     fontWeight: '400',
+    fontStyle: 'normal',
     lineHeight: 10,
+    letterSpacing: 0,
     color: '#656565',
   },
 
-  price: {
+  priceContainer: {
     width: 151.5,
-    height: 17,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+
+  oldPrice: {
+    fontFamily: 'Inter',
+    fontSize: 10,
+    fontWeight: '600',
+    lineHeight: 10,
+    letterSpacing: 0,
+    color: '#656565',
+    textDecorationLine: 'line-through',
+  },
+
+  price: {
     fontFamily: 'Inter',
     fontSize: 14,
     fontWeight: '600',
     lineHeight: 14,
+    letterSpacing: 0,
     color: '#000000',
   },
 
