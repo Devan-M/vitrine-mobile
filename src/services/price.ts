@@ -4,6 +4,17 @@ export function convertUsdToBrl(price: number): number {
   return price * USD_TO_BRL;
 }
 
+export function getOriginalPrice(
+  price: number,
+  discountPercentage: number
+): number | null {
+  if (discountPercentage <= 0) {
+    return null;
+  }
+
+  return price / (1 - discountPercentage / 100);
+}
+
 export function formatPrice(price: number): string {
   const convertedPrice = convertUsdToBrl(price);
 

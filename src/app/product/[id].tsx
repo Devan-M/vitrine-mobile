@@ -12,7 +12,10 @@ import {
 
 import BackIcon from '@/components/BackIcon';
 import api from '@/services/api';
-import { formatPrice } from '@/services/price';
+import {
+  formatPrice,
+  getOriginalPrice,
+} from '@/services/price';
 import type { Product } from '@/types/product';
 
 export default function ProductDetailsScreen() {
@@ -54,11 +57,10 @@ export default function ProductDetailsScreen() {
     );
   }
 
-  const fullPrice =
-    product.discountPercentage > 0
-      ? product.price /
-      (1 - product.discountPercentage / 100)
-      : null;
+  const fullPrice = getOriginalPrice(
+    product.price,
+    product.discountPercentage
+  );
 
   return (
     <View style={styles.container}>

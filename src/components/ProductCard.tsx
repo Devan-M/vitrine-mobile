@@ -7,7 +7,10 @@ import {
   View,
 } from 'react-native';
 
-import { formatPrice } from '@/services/price';
+import {
+  formatPrice,
+  getOriginalPrice,
+} from '@/services/price';
 import type { Product } from '@/types/product';
 
 type ProductCardProps = {
@@ -17,6 +20,10 @@ type ProductCardProps = {
 export default function ProductCard({
   product,
 }: ProductCardProps) {
+  const originalPrice = getOriginalPrice(
+    product.price,
+    product.discountPercentage
+  );
   return (
     <Pressable
       style={styles.card}
@@ -55,12 +62,9 @@ export default function ProductCard({
             {formatPrice(product.price)}
           </Text>
 
-          {product.discountPercentage > 0 && (
+          {originalPrice !== null && (
             <Text style={styles.oldPrice}>
-              {formatPrice(
-                product.price /
-                  (1 - product.discountPercentage / 100)
-              )}
+              {formatPrice(originalPrice)}
             </Text>
           )}
         </View>
